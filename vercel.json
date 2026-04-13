@@ -1,10 +1,4 @@
 {
-  "crons": [
-    {
-      "path": "/api/update-rates",
-      "schedule": "0 7 * * *"
-    }
-  ],
   "rewrites": [
     { "source": "/rates.json", "destination": "/api/rates" }
   ]
