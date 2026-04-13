@@ -819,13 +819,18 @@
   };
 
   async function loadRates() {
+    document.getElementById('results-list').innerHTML =
+      '<div style="padding:32px;text-align:center;color:#aaa;font-size:14px;">Chargement des taux en direct...</div>';
     try {
       const resp = await fetch('/api/rates?t=' + Date.now());
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
       ratesData = await resp.json();
       updateLastUpdated();
       updateCalc();
     } catch(e) {
+      console.error('loadRates:', e);
       document.getElementById('rates-error').style.display = 'block';
+      document.getElementById('results-list').innerHTML = '';
     }
   }
 
@@ -909,8 +914,6 @@
   }
 
   loadRates();
-
-  updateCalc();
 
   // Smooth scroll
   document.querySelectorAll('a[href^="#"]').forEach(a => {
