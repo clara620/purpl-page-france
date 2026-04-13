@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mise à jour des taux — Purpl</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: #f5f4f2; color: #1A1918; min-height: 100vh; padding: 40px 20px; }
+  .wrap { max-width: 600px; margin: 0 auto; }
+  .header { background: #641EEB; border-radius: 16px; padding: 24px 28px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; }
+  .header h1 { color: white; font-size: 20px; font-weight: 700; }
+  .header p { color: rgba(255,255,255,0.7); font-size: 13px; margin-top: 4px; }
+  .date-badge { background: rgba(255,255,255,0.15); color: white; border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+
+  .info-box { background: #fff8e0; border: 1px solid #FAE18C; border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; font-size: 13px; color: #5a4200; line-height: 1.6; }
+  .info-box strong { display: block; margin-bottom: 4px; font-size: 14px; }
+
+  .card { background: white; border-radius: 16px; padding: 20px 24px; margin-bottom: 12px; border: 1.5px solid #eee; }
+  .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid #f0f0f0; }
+  .provider-logo { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; flex-shrink: 0; }
+  .logo-purpl { background: #641EEB; color: white; }
+  .logo-paysend { background: #00b14f; color: white; }
+  .logo-remitly { background: #e5332a; color: white; }
+  .logo-wu { background: #FFDD00; color: #1a1a1a; font-size: 9px; }
+  .logo-wr { background: #663399; color: white; }
+  .logo-mg { background: #E32432; color: white; }
+  .logo-sw { background: #1a1a2e; color: #7DF; }
+  .provider-name { font-size: 16px; font-weight: 700; }
+  .provider-link { font-size: 12px; color: #641EEB; text-decoration: none; display: block; margin-top: 1px; }
+  .provider-link:hover { text-decoration: underline; }
+
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.04em; }
+  .field input, .field select {
+    border: 1.5px solid #e0e0e0; border-radius: 10px;
+    padding: 10px 14px; font-size: 15px; font-weight: 600;
+    font-family: inherit; color: #1A1918;
+    outline: none; transition: border-color 0.2s;
+  }
+  .field input:focus, .field select:focus { border-color: #641EEB; }
+  .field.highlight input { border-color: #641EEB; background: #f8f4ff; color: #641EEB; }
+
+  .purpl-card { border-color: #DCCDFF; background: #faf8ff; }
+  .purpl-card .card-header { border-bottom-color: #DCCDFF; }
+
+  .submit-btn {
+    width: 100%; padding: 16px;
+    background: #641EEB; color: white;
+    border: none; border-radius: 12px;
+    font-size: 16px; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+    margin-top: 8px; transition: background 0.2s;
+  }
+  .submit-btn:hover { background: #4a13b0; }
+  .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .output-section { margin-top: 20px; display: none; }
+  .output-section.visible { display: block; }
+  .output-label { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px; }
+  .output-box {
+    background: #1A1918; color: #91E691;
+    border-radius: 12px; padding: 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px; line-height: 1.6;
+    white-space: pre; overflow-x: auto;
+  }
+  .copy-btn {
+    width: 100%; padding: 12px;
+    background: #1A1918; color: white;
+    border: none; border-radius: 12px;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer; font-family: inherit;
+    margin-top: 8px;
+  }
+  .copy-btn:hover { background: #333; }
+  .copy-btn.copied { background: #2a7a3b; }
+
+  .instructions { background: white; border-radius: 16px; padding: 20px 24px; margin-top: 12px; border: 1.5px solid #eee; }
+  .instructions h3 { font-size: 15px; font-weight: 700; margin-bottom: 12px; }
+  .step { display: flex; gap: 12px; margin-bottom: 10px; align-items: flex-start; }
+  .step-num { width: 24px; height: 24px; background: #641EEB; color: white; border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-text { font-size: 13px; color: #555; line-height: 1.5; }
+  .step-text a { color: #641EEB; }
+
+  .last-update { font-size: 12px; color: #aaa; text-align: center; margin-top: 16px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div>
+      <h1>&#10022; Mise à jour des taux</h1>
+      <p>France → Liban · 300 EUR · Chaque matin à 8h</p>
+    </div>
+    <div class="date-badge" id="today-date"></div>
+  </div>
+
+  <div class="info-box">
+    <strong>&#128203; Mode d'emploi rapide</strong>
+    Pour chaque service ci-dessous, ouvrez le lien, tapez 300 EUR en envoi depuis la France vers le Liban, et notez le montant reçu en USD. Remplissez les champs, puis copiez le JSON généré dans <code>rates.json</code> sur GitHub.
+  </div>
+
+  <div id="provider-form"></div>
+
+  <button class="submit-btn" onclick="generateJSON()">Générer le fichier rates.json ↓</button>
+
+  <div class="output-section" id="output-section">
+    <div class="output-label">Contenu à copier dans rates.json</div>
+    <div class="output-box" id="json-output"></div>
+    <button class="copy-btn" id="copy-btn" onclick="copyJSON()">&#128203; Copier le JSON</button>
+  </div>
+
+  <div class="instructions">
+    <h3>Après avoir copié le JSON ↑</h3>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-text">Allez sur <a href="https://github.com/clara620/purpl-page-france" target="_blank">github.com/clara620/purpl-page-france</a></div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-text">Cliquez sur <strong>rates.json</strong> → icône crayon (modifier)</div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-text">Sélectionnez tout (Ctrl+A), collez le nouveau JSON, cliquez <strong>Commit changes</strong></div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-text">Vercel redéploie automatiquement en ~30 secondes ✓</div>
+    </div>
+  </div>
+
+  <div class="last-update" id="last-update-info"></div>
+</div>
+
+<script>
+const providers = [
+  {
+    id: 'purpl',
+    name: 'Purpl',
+    logoClass: 'logo-purpl',
+    logo: '&#10022;',
+    link: 'https://purplme.com',
+    linkText: 'purplme.com',
+    defaultReceived: 326.40,
+    defaultFee: 1.50,
+    defaultSpeed: 'Instantané',
+    cashoutFree: true,
+    note: 'Retrait gratuit au Liban',
+    isPurpl: true
+  },
+  {
+    id: 'paysend',
+    name: 'Paysend',
+    logoClass: 'logo-paysend',
+    logo: 'PS',
+    link: 'https://paysend.com/en-fr/send-money/from-france-to-lebanon',
+    linkText: 'paysend.com → France → Lebanon',
+    defaultReceived: 324.15,
+    defaultFee: 1.50,
+    defaultSpeed: 'Instantané',
+    cashoutFree: false,
+    note: 'Frais bancaires possibles'
+  },
+  {
+    id: 'remitly',
+    name: 'Remitly',
+    logoClass: 'logo-remitly',
+    logo: 'RL',
+    link: 'https://www.remitly.com/',
+    linkText: 'remitly.com → France → Lebanon',
+    defaultReceived: 321.80,
+    defaultFee: 1.99,
+    defaultSpeed: 'Quelques minutes',
+    cashoutFree: false,
+    note: 'Frais de retrait tiers'
+  },
+  {
+    id: 'worldremit',
+    name: 'WorldRemit',
+    logoClass: 'logo-wr',
+    logo: 'WR',
+    link: 'https://www.worldremit.com/en/lebanon',
+    linkText: 'worldremit.com → Lebanon',
+    defaultReceived: 319.50,
+    defaultFee: 2.50,
+    defaultSpeed: '1–3 heures',
+    cashoutFree: false,
+    note: 'Frais de retrait possibles'
+  },
+  {
+    id: 'sendwave',
+    name: 'Sendwave',
+    logoClass: 'logo-sw',
+    logo: 'SW',
+    link: 'https://www.sendwave.com/en/countries/lebanon/fr',
+    linkText: 'sendwave.com → Lebanon → from France',
+    defaultReceived: 318.70,
+    defaultFee: 0,
+    defaultSpeed: 'Quelques minutes',
+    cashoutFree: false,
+    note: 'Frais de retrait possibles'
+  },
+  {
+    id: 'westernunion',
+    name: 'Western Union',
+    logoClass: 'logo-wu',
+    logo: 'WU',
+    link: 'https://www.westernunion.com/fr/en/send-money-to-lebanon.html',
+    linkText: 'westernunion.com → Lebanon',
+    defaultReceived: 310.20,
+    defaultFee: 4.90,
+    defaultSpeed: '1–3 heures',
+    cashoutFree: false,
+    note: 'Frais de retrait tiers'
+  },
+  {
+    id: 'moneygram',
+    name: 'MoneyGram',
+    logoClass: 'logo-mg',
+    logo: 'MG',
+    link: 'https://www.moneygram.com/us/en/corridor/lebanon',
+    linkText: 'moneygram.com → Lebanon',
+    defaultReceived: 307.60,
+    defaultFee: 4.99,
+    defaultSpeed: '2–5 jours',
+    cashoutFree: false,
+    note: 'Frais de retrait tiers'
+  }
+];
+
+const speedOptions = ['Instantané', 'Quelques minutes', '1–3 heures', '2–5 jours'];
+
+function buildForm() {
+  const container = document.getElementById('provider-form');
+  providers.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'card' + (p.isPurpl ? ' purpl-card' : '');
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="provider-logo ${p.logoClass}">${p.logo}</div>
+        <div>
+          <div class="provider-name">${p.name}</div>
+          <a href="${p.link}" target="_blank" class="provider-link">&#128279; Ouvrir ${p.linkText}</a>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field highlight">
+          <label>Montant reçu (USD)</label>
+          <input type="number" id="received_${p.id}" value="${p.defaultReceived}" step="0.01" min="0" placeholder="ex: 324.50">
+        </div>
+        <div class="field">
+          <label>Frais d'envoi (EUR)</label>
+          <input type="number" id="fee_${p.id}" value="${p.defaultFee}" step="0.01" min="0">
+        </div>
+      </div>
+      <div class="field-row" style="margin-top:10px;">
+        <div class="field">
+          <label>Délai</label>
+          <select id="speed_${p.id}">
+            ${speedOptions.map(s => `<option value="${s}" ${s === p.defaultSpeed ? 'selected' : ''}>${s}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field">
+          <label>Note (optionnel)</label>
+          <input type="text" id="note_${p.id}" value="${p.note}">
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function generateJSON() {
+  const now = new Date();
+  const isoDate = now.toISOString().slice(0, 19);
+  const data = {
+    updated: isoDate,
+    updated_by: "Purpl Team",
+    send_amount: 300,
+    send_currency: "EUR",
+    providers: providers.map(p => ({
+      id: p.id,
+      name: p.name,
+      received: parseFloat(document.getElementById('received_' + p.id).value) || 0,
+      fee: parseFloat(document.getElementById('fee_' + p.id).value) || 0,
+      speed: document.getElementById('speed_' + p.id).value,
+      cashout_free: p.cashoutFree,
+      note: document.getElementById('note_' + p.id).value
+    }))
+  };
+
+  const json = JSON.stringify(data, null, 2);
+  document.getElementById('json-output').textContent = json;
+  document.getElementById('output-section').classList.add('visible');
+  document.getElementById('output-section').scrollIntoView({ behavior: 'smooth' });
+}
+
+function copyJSON() {
+  const text = document.getElementById('json-output').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = '✓ Copié !';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = '📋 Copier le JSON';
+      btn.classList.remove('copied');
+    }, 2500);
+  });
+}
+
+// Set today's date
+const today = new Date();
+const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+document.getElementById('today-date').textContent = today.toLocaleDateString('fr-FR', options);
+
+// Try to load last update info from rates.json
+fetch('./rates.json')
+  .then(r => r.json())
+  .then(data => {
+    if (data.updated) {
+      const d = new Date(data.updated);
+      document.getElementById('last-update-info').textContent =
+        'Dernière mise à jour : ' + d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+  })
+  .catch(() => {});
+
+buildForm();
+</script>
+</body>
+</html>
