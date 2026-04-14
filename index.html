@@ -880,37 +880,37 @@
         : p.fee.toFixed(2) + '€ + marge taux';
       const bestMark = isBest ? '<span class="best-badge">Meilleur</span>' : '';
 
-      return \`
-        <div class="\${rowClass}">
+      return `
+        <div class="${rowClass}">
           <div class="provider-name">
-            <div class="provider-logo \${p.logoClass}">\${p.logo}</div>
+            <div class="provider-logo ${p.logoClass}">${p.logo}</div>
             <div>
-              <div style="display:flex;align-items:center;gap:8px;">\${p.name} \${bestMark}</div>
-              <div class="cashout-note">\${p.cashout_free ? '✓ Retrait gratuit' : p.note}</div>
+              <div style="display:flex;align-items:center;gap:8px;">${p.name} ${bestMark}</div>
+              <div class="cashout-note">${p.cashout_free ? '✓ Retrait gratuit' : p.note}</div>
             </div>
           </div>
           <div>
-            <div class="\${amountClass}">$\${p.scaledReceived.toFixed(2)}</div>
-            \${p.note && p.note.includes('nouveau client') ? '<div class="promo-note"><span class="promo-dot"></span>offre nouveau client</div>' : ''}
+            <div class="${amountClass}">$${p.scaledReceived.toFixed(2)}</div>
+            ${p.note && p.note.includes('nouveau client') ? '<div class="promo-note"><span class="promo-dot"></span>offre nouveau client</div>' : ''}
           </div>
-          <div class="fee-amount">\${feeDisplay}</div>
-          <div><span class="speed-tag \${speedClass}">\${p.speed}</span></div>
-        </div>\`;
+          <div class="fee-amount">${feeDisplay}</div>
+          <div><span class="speed-tag ${speedClass}">${p.speed}</span></div>
+        </div>`;
     }).join('');
 
     const savingVsWU = purplResult && wuResult
       ? (purplResult.scaledReceived - wuResult.scaledReceived).toFixed(2)
       : '—';
 
-    savingsBlock.innerHTML = \`
+    savingsBlock.innerHTML = `
       <div class="savings-text">
         Avec Purpl, votre famille reçoit jusqu'à
-        <span class="savings-highlight">$\${savingVsWU} de plus</span>
-        qu'avec Western Union pour un envoi de \${inputAmount}€
+        <span class="savings-highlight">$${savingVsWU} de plus</span>
+        qu'avec Western Union pour un envoi de ${inputAmount}€
       </div>
       <a href="#download" style="background:var(--valley-green);color:#0d2e0d;border:none;border-radius:50px;padding:12px 22px;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;white-space:nowrap;">
         Envoyer avec Purpl →
-      </a>\`;
+      </a>`;
   }
 
   loadRates();
